@@ -45,13 +45,11 @@ class CourseAssignmentScoreboardTest extends \OmegaUp\Test\ControllerTestCase
 
         // Call API
         $adminLogin = self::login($courseData['admin']);
-        $response = \OmegaUp\Controllers\Course::apiAssignmentScoreboard(
-            new \OmegaUp\Request([
-                'auth_token' => $adminLogin->auth_token,
-                'course' => $courseData['course_alias'],
-                'assignment' => $courseData['assignment_alias'],
-            ])
-        );
+        $response = \OmegaUp\Controllers\Course::apiAssignmentScoreboard(new \OmegaUp\Request([
+            'auth_token' => $adminLogin->auth_token,
+            'course' => $courseData['course_alias'],
+            'assignment' => $courseData['assignment_alias']
+        ]));
 
         $userScore = [];
         foreach ($expectedScores as $index => $score) {
@@ -59,7 +57,7 @@ class CourseAssignmentScoreboardTest extends \OmegaUp\Test\ControllerTestCase
             $userScore[$index] = $score[$key[0]];
         }
 
-        // Validation. Now, courses should be sorted by ranking.
+        // Validation. Sort expected by ranking (score desc, username asc) to match API.
         array_multisort(
             array_values($userScore),
             SORT_DESC,
